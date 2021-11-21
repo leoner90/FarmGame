@@ -13,7 +13,7 @@ app.use(express.json())
 // USE CORS
 app.use(
   cors({
-    origin: 'http://localhost:8000',
+    origin: 'http://localhost:8080',
     credentials: true,
   }),
 )
@@ -22,5 +22,5 @@ app.use(
 app.use(Router)
 
 // //START SERVER LISTENER
-const port = 3000
+const port = 4545
 app.listen(port, function () {})
