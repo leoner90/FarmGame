@@ -1,0 +1,23 @@
+/* FIELD */
+.Game-field-wrapper {
+    min-height: 120px;
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1% 12.5%;   
+}
+
+.Game-field-cell {
+    min-height: 75px;
+    border: 1px solid #28c16a; 
+    align-items: center;
+    display: flex;
+    flex: 1 0 12.5%;
+    border-radius: 10px;
+}
+
+.Game-field-cell-img {
+    width: 85px;
+    height: 85px;
+    margin: 0 auto;
+}

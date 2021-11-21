@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
+// DB CALL
 async function PostDbCall(whatToCall, data, rejectWithValue) {
   // Assign Method , Header And DATA
   const requestOptions = {
@@ -25,14 +26,14 @@ async function PostDbCall(whatToCall, data, rejectWithValue) {
 }
 
 // Get All Plants From Server
-export const fetchTodos = createAsyncThunk(
-  'MyTestReducer/fetchTodos',
+export const fetchPlants = createAsyncThunk(
+  'MyTestReducer/fetchPlants',
   async function (data, { rejectWithValue }) {
     return PostDbCall('getPlants', data, rejectWithValue)
   },
 )
 
-// Get User Data and his Game Field
+// Get User Data
 export const fetchUser = createAsyncThunk(
   'MyTestReducer/fetchUser',
   async function (data, { rejectWithValue }) {
@@ -41,7 +42,7 @@ export const fetchUser = createAsyncThunk(
   },
 )
 
-// Get User Data and his Game Field
+// Get User Game Field
 export const GenerateUserGameField = createAsyncThunk(
   'MyTestReducer/GenerateUserGameField',
   async function (data, { rejectWithValue }) {
@@ -58,11 +59,13 @@ export const buyItem = createAsyncThunk(
   },
 )
 
+// On Error
 const setError = (state, action) => {
   state.status = 'rejected'
   state.error = action.payload
 }
 
+// Reducer
 export const counterSlice = createSlice({
   name: 'MyTestReducer',
   initialState: {
@@ -72,40 +75,47 @@ export const counterSlice = createSlice({
     user: '',
     money: null,
     NotEnoughtMoney: null,
-    TraderSpech: false,
+    TraderSpeech: false,
     GameField: [],
   },
-  reducers: {},
+
   extraReducers: {
-    [fetchTodos.pending]: state => {
+    // Get All Plants
+    [fetchPlants.pending]: state => {
       state.status = 'loading'
       state.error = null
     },
-    [fetchTodos.fulfilled]: (state, action) => {
+    [fetchPlants.fulfilled]: (state, action) => {
       state.status = 'resolved'
       state.AllPlants = action.payload
     },
-    [fetchTodos.rejected]: setError,
+    [fetchPlants.rejected]: setError,
 
+    // Get / Set User Information
     [fetchUser.fulfilled]: (state, action) => {
       state.status = 'resolved'
       state.money = action.payload.money
     },
+
+    // On Buying Plant
     [buyItem.fulfilled]: (state, action) => {
       state.status = 'resolved'
+      // TODO  - To show user that msg disappeared and showed again
       state.NotEnoughtMoney = false
-      if (action.payload.money) {
-        if (action.payload.money === true) {
-          action.payload.money = 0
-        }
+
+      // Depending on server response
+      if (action.payload === 'InUse') {
+        state.TraderSpeech = 'THIS FIELD IN USE'
+      } else if (action.payload.money !== false) {
         state.money = action.payload.money
-        state.TraderSpech = 'GOOD DEAL'
+        state.TraderSpeech = 'GOOD DEAL'
       } else {
-        state.TraderSpech = 'NO MONEY- NO DEAL'
+        state.TraderSpeech = 'NO MONEY- NO DEAL'
         state.NotEnoughtMoney = true
       }
     },
 
+    // Set Game Field
     [GenerateUserGameField.fulfilled]: (state, action) => {
       state.status = 'resolved'
       state.GameField = action.payload
