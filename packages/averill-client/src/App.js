@@ -7,7 +7,8 @@ import Shop from './components/ShopComponent/Shop.jsx'
 export default function App() {
   return (
     <Provider store={store}>
-      <div>
+      {/* TODO style , Just For Testing purposes */}
+      <div className="flex , flex-col" style={{ minHeight: '100vh' }}>
         <Field />
         <Shop />
       </div>

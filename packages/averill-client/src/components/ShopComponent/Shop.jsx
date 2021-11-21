@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { fetchPlants, fetchUser } from '../../store/slice'
+import './ShopStyle.css'
 
-import { fetchTodos, fetchUser } from '../../store/slice'
-import './ShopStyle.css' // Tell webpack that Button.js uses these styles
 // ON DRAG
 function drag(ev) {
   ev.dataTransfer.effectAllowed = 'copy'
@@ -10,100 +10,69 @@ function drag(ev) {
 }
 
 function ShopComponent() {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(fetchTodos())
-    dispatch(fetchUser(0))
-  }, [dispatch])
-
+  // Variables
   const AllPlants = useSelector(state => state.MyTestReducer.AllPlants)
   const money = useSelector(state => state.MyTestReducer.money)
   const NotEnoughtMoney = useSelector(
     state => state.MyTestReducer.NotEnoughtMoney,
   )
-  const TraderSpech = useSelector(state => state.MyTestReducer.TraderSpech)
+  const TraderSpeech = useSelector(state => state.MyTestReducer.TraderSpeech)
+
+  // On Load  - Get All Plants for shop , and user information
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchPlants())
+    const userId = 0
+    dispatch(fetchUser(userId))
+  }, [dispatch])
 
   return (
     <div className="shop-wrapper flex">
+      {/* Trader Area */}
       <div className="trader-area">
         <div
-          className="TalkBox animate-bounce "
+          className="TalkBox animate-bounce font-bold text-center"
           style={{
-            opacity: TraderSpech ? '1' : '0',
+            opacity: TraderSpeech ? '1' : '0',
             color: NotEnoughtMoney ? 'red' : 'rgb(116, 201, 27)',
-            fontWeight: 'bold',
-            textAlign: 'center',
           }}
         >
-          {TraderSpech}
+          {TraderSpeech}
         </div>
         <img
+          className="Shop-trader-img"
           src="/images/ShopImg/trader.png"
-          style={{ width: 160, height: 'auto', padding: 10, borderRadius: 7 }}
           draggable="false"
         />
-        <div
-          style={{
-            textAlign: 'center',
-            color: '#fff',
-            borderRadius: 5,
-            fontStyle: 'italic',
-            background: '#666666',
-          }}
-        >
-          Joney
-        </div>
+        <div className="Trader-speech-box"> Joney </div>
       </div>
-      <div style={{ flex: 1 }}>
-        <div
-          className="flex"
-          style={{
-            borderBottom: '1px solid #fff',
-            padding: 20,
-            textAlign: 'center',
-          }}
-        >
-          <h1
-            style={{
-              flex: 1,
-              color: '#74c91b',
-              fontWeight: 'bold',
-              letterSpacing: 0.5,
-            }}
-          >
-            {' '}
-            THE BEST SHOP{' '}
+
+      {/* Shop Header */}
+      <div className="flex-1">
+        <div className="flex , Shop-header">
+          <h1 className="flex-1 , Shop-name">
+            <img className="Shop-logo" src="/images/ShopImg/ShopLogo.png" />
+            THE BEST SHOP
           </h1>
           <div style={{ paddingRight: 20 }}>
             <img
+              className="Money-logo"
               src="/images/ShopImg/moneyIcon.png"
               alt=""
-              height={25}
-              width={35}
               draggable="false"
-              style={{ display: 'inline-block' }}
             />
-            <span style={{ color: '#e8da89', fontSize: 16 }}> {money} $ </span>
+            <span className="User-money"> {money} $ </span>
           </div>
         </div>
-        <div className="ShopContainer , flex" style={{ flexDirection: 'row' }}>
+
+        {/* Shop products and prices */}
+        <div className="flex">
           {AllPlants.map((testObj, index) => {
             return (
-              <div
-                key={index}
-                title="Drag And Drop"
-                style={{
-                  background: 'rgba(70, 69, 69, 1)',
-                  minWidth: 100,
-                  padding: 10,
-                  margin: 10,
-                  textAlign: 'center',
-                  borderRadius: 5,
-                  cursor: 'pointer',
-                }}
-              >
+              <div className="Shop-cell" key={index} title="Drag And Drop">
                 <div>
                   <img
+                    className="Shop-product-img"
                     id={index}
                     src={testObj.img}
                     draggable="true"
@@ -112,13 +81,9 @@ function ShopComponent() {
                       drag(e)
                     }}
                     data-price={testObj.price}
-                    style={{ width: 85, height: 85, margin: '0 auto' }}
                   />
                 </div>
-                <p className="price" style={{ color: '#fff' }}>
-                  {' '}
-                  {testObj.price} ${' '}
-                </p>
+                <p className="Shop-product-price"> {testObj.price} $ </p>
               </div>
             )
           })}

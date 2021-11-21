@@ -1,17 +1,23 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { buyItem, GenerateUserGameField } from '../store/slice'
+import './FieldStyle.css'
 
 function FieldTest() {
+  // Variables
   const dispatch = useDispatch()
   const Money = useSelector(state => state.MyTestReducer.money)
+  const GameField = useSelector(state => state.MyTestReducer.GameField)
 
+  // Get Game field on Load (Return Generated field based on array and user data receved from server)
   useEffect(() => {
     dispatch(GenerateUserGameField(0))
   }, [dispatch])
 
-  const GameField = useSelector(state => state.MyTestReducer.GameField)
-
+  // On Drop Function
+  // Gets info from droped items -> PlantId , PlantPrice , index of cell where img was dropped
+  // Checks is there enought Money to buy Plant on Front end
+  // Generates Object sends to the server (TO DO , mast called after frontEnd money check!!)
   async function drop(ev, index) {
     ev.preventDefault()
     const PlantId = ev.dataTransfer.getData('text')
@@ -26,30 +32,17 @@ function FieldTest() {
       ev.target.appendChild(nodeCopy)
     }
   }
+
   return (
-    <div>
-      <div
-        className=""
-        id="div1"
-        style={{
-          minHeight: 120,
-          border: '1px solid red',
-          display: 'flex',
-          flexWrap: 'wrap',
-          padding: 20,
-        }}
-      >
-        {GameField.map((testObj, index) => {
+    <div className="flex-1">
+      <div className="Game-field-wrapper">
+        {/* Game Field Array , go trhtought Array if some cell have field sets img */}
+        {/* haveField -> contains img src based on plant id (logic on server side) --> TODO in future , return only plant id */}
+        {GameField.map((haveField, index) => {
           return (
             <div
+              className="Game-field-cell"
               key={index}
-              style={{
-                minHeight: '85px',
-                border: '1px solid red',
-                alignItems: 'center',
-                display: 'flex',
-                flex: '1 0 12.5%',
-              }}
               onDrop={e => {
                 drop(e, index)
               }}
@@ -57,16 +50,14 @@ function FieldTest() {
                 e.preventDefault()
               }}
             >
-              {testObj ? (
+              {haveField ? (
                 <img
-                  src={testObj}
+                  className="Game-field-cell-img "
+                  src={haveField}
                   alt=""
                   draggable="false"
-                  style={{ width: 85, height: 85, margin: '0 auto' }}
                 />
-              ) : (
-                ''
-              )}
+              ) : null}
             </div>
           )
         })}
