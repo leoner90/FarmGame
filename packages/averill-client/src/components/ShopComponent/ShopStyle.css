@@ -1,0 +1,16 @@
+
+.shop-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(92, 92, 92, 1);
+    flex-direction: row;
+}
+
+.trader-area {
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    border-radius: 7px;
+    
+}
